@@ -29,3 +29,6 @@ mongoose.connect(uri)
          }
      });
  });
+
+ // Export app for testing purposes
+module.exports = app;

@@ -218,7 +218,7 @@ exports.update_password = (req, res) => {
 	User.find({username: username})
 		.then((result) => {
 			if (Object.keys(result).length > 0) {
-				User.findOneAndUpdate({'username': username}, {'password': password}, err => {
+				User.findOneAndUpdate({username: username}, {password: password}, err => {
 					if (err) {
 						console.log(err);
 						res.status(404).send({
@@ -249,3 +249,28 @@ exports.update_password = (req, res) => {
 		});
 
 };
+
+exports.find_user = (req, res) => {
+	const username = req.query.username;
+	User.find({username: username})
+		.then((result) => {
+			if (Object.keys(result).length > 0) {
+				res.status(200).send({
+					status: "success",
+					data: {
+						message: "User exists"
+					}
+				});
+				return;
+ 		
+        	} else {
+				res.status(404).send({
+            		status: "failure",
+            		data: {
+                		message: "No user with username " + username + " exists"
+            		}
+        		});
+        		return;
+			}
+		});
+}
