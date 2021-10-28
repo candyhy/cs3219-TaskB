@@ -4,27 +4,27 @@ const chai = require( "chai" );
 const chaiHttp = require( "chai-http" );
 
 const app = require( "../index" );
-const User = require( "../models/User" );
-const testData = require( "../dummyTestData/dummyUsers" );
+const Task = require( "../models/Task" );
+const testData = require( "../dummyTestData/dummyTasks" );
 
 const expect = chai.expect;
 const should = chai.should();
 chai.use( chaiHttp );
 
-describe( "add 2 users", () => {
+describe( "add 2 tasks", () => {
     before( ( done ) => {
-        User.deleteMany( {}, ( err ) => {
+        Task.deleteMany( {}, ( err ) => {
             done();
         } );
     } );
 
-    describe( "POST /create_account/", () => {
-        it( "should add 1 user", ( done ) => {
+    describe( "POST /create_task/", () => {
+        it( "should add 1 task", ( done ) => {
             chai.request( app )
-                .post( '/create_account')
+                .post( '/create_task')
                 .send({
-                    username: testData.validUser1.username,
-                    password: testData.validUser1.password
+                    taskname: testData.validTask1.taskname,
+                    description: testData.validTask1.description
                 })
                 .end( ( err, res ) => {
                     if (err) {
@@ -36,12 +36,12 @@ describe( "add 2 users", () => {
                 } );
         } );
 
-        it( "should add another user", ( done ) => {
+        it( "should add another task", ( done ) => {
             chai.request( app )
-                .post( '/create_account')
+                .post( '/create_task')
                 .send({
-                    username: testData.validUser2.username,
-                    password: testData.validUser2.password
+                    taskname: testData.validTask2.taskname,
+                    description: testData.validTask2.description
                 })
                 .end( ( err, res ) => {
                     if (err) {
@@ -55,15 +55,15 @@ describe( "add 2 users", () => {
     } );
 } );
 
-describe( "update user password", () => {
-    describe( "PUT /update_password", () => {
-        it( "should update user user2 password from password2 to testPassword", ( done ) => {
+describe( "update task description", () => {
+    describe( "PUT /update_task", () => {
+        it( "should update task 'task2' description from 'description2' to 'testDescription'", ( done ) => {
    
             chai.request( app )
-                .put( '/update_password')
+                .put( '/update_task')
                 .send({
-                    username: testData.updateUserPassword.username,
-                    password: testData.updateUserPassword.password
+                    taskname: testData.updateTaskDescription.taskname,
+                    description: testData.updateTaskDescription.description
                 })
                 .end( ( err, response ) => {
                 if (err) {
@@ -78,14 +78,14 @@ describe( "update user password", () => {
     } );
 } );
 
-describe( "delete user account", () => {
-    describe( "DELETE /delete_user", () => {
-        it( "should delete user with input username", ( done ) => {
+describe( "delete task", () => {
+    describe( "DELETE /delete_task", () => {
+        it( "should delete task with input taskname", ( done ) => {
    
             chai.request( app )
-                .delete( '/delete_user')
+                .delete( '/delete_task')
                 .send({
-                    username: testData.validUser2.username
+                    taskname: testData.validTask2.taskname
                 })
                 .end( ( err, response ) => {
                 if (err) {
@@ -100,14 +100,14 @@ describe( "delete user account", () => {
     } );
 } );
 
-describe( "delete user", () => {
-    describe( "GET /find_user", () => {
-        it( "should find user with input username", ( done ) => {
+describe( "find task", () => {
+    describe( "GET /find_task", () => {
+        it( "should find task with input taskname", ( done ) => {
    
             chai.request( app )
-                .get( '/find_user')
+                .get( '/find_task')
                 .query({
-                    username: testData.validUser1.username
+                    taskname: testData.validTask1.taskname
                 })
                 .end( ( err, response ) => {
                 if (err) {

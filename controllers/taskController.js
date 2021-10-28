@@ -1,19 +1,19 @@
-const User = require('../models/User');
+const Task = require('../models/Task');
 const mongoose = require('mongoose');
 
-const hasMissingUserNameField = (req) => {
-	return req.body.username == undefined;
+const hasMissingTaskNameField = (req) => {
+	return req.body.taskname == undefined;
 }
 
-const hasMissingPasswordField = (req) => {
-	return req.body.password == undefined;
+const hasMissingDescriptionField = (req) => {
+	return req.body.description == undefined;
 };
 
-const hasMissingAuthFields = (req) => {
-	return req.body.username == undefined && req.body.password == undefined; 
+const hasMissingFields = (req) => {
+	return req.body.taskname == undefined && req.body.description == undefined; 
 }
 
-const isPasswordAndUserMatch = (req, res) => {
+/*const isPasswordAndUserMatch = (req, res) => {
 	const username = req.body.username;
 	User.find({username: username})
         .then((result) => {
@@ -47,55 +47,55 @@ const isPasswordAndUserMatch = (req, res) => {
 				}
 			}
         });
-};
+};*/
 
-exports.create_account = (req, res) => {
+exports.create_task = (req, res) => {
 
-	if (hasMissingAuthFields(req)) {
+	if (hasMissingFields(req)) {
 		res.status(400).send({
 			status: "failure",
 			data: {
-				message: "Missing username and password fields"
+				message: "Missing taskname and description fields"
 			}
 		});
 		return;
 	}
 
-	if (hasMissingUserNameField(req)) {
+	if (hasMissingTaskNameField(req)) {
 		res.status(400).send({
 			status: "failure",
 			data: {
-				message: "Missing username field"
+				message: "Missing taskname field"
 			}
 		});
 		return;
 
 	}
 
-	if (hasMissingPasswordField(req)) {
+	if (hasMissingDescriptionField(req)) {
 		res.status(400).send({
 			status: "failure",
 			data: {
-				message: "Missing password field"
+				message: "Missing description field"
 			}
 		});
 		return;
 	}
-	const username = req.body.username;
-	User.find({username: username})
+	const taskname = req.body.taskname;
+	Task.find({taskname: taskname})
 		.then((result) => {
 			if (Object.keys(result).length == 0) {
-				const password = req.body.password
+				const description = req.body.description;
 
-				const user = new User({
-					username : username,
-					password : password,
+				const task = new Task({
+					taskname : taskname,
+					description : description,
 				});
-				user.save().then((result) => {
+				task.save().then((result) => {
 					res.status(200).send({
 						status: "success",
 						data: {
-							message: "Create account successful"
+							message: "Create task successful"
 						}
 					});
 					return;    
@@ -104,7 +104,7 @@ exports.create_account = (req, res) => {
 				res.status(404).send({
             		status: "failure",
             		data: {
-                		message: "A user with username " + username + " already exists"
+                		message: "A task with taskname " + taskname + " already exists"
             		}
         		});
         		return;
@@ -112,7 +112,7 @@ exports.create_account = (req, res) => {
 		});
 };
 
-exports.user_login = (req, res) => {
+/*exports.user_login = (req, res) => {
 	if (hasMissingAuthFields(req)) {
 		res.status(400).send({ 
 			status: "failure",
@@ -145,29 +145,29 @@ exports.user_login = (req, res) => {
 
 	isPasswordAndUserMatch(req, res);
 	return;
-};
+};*/
 
-exports.delete_user = (req, res) => {
-	if (hasMissingUserNameField(req)) {
+exports.delete_task = (req, res) => {
+	if (hasMissingTaskNameField(req)) {
 		res.status(400).send({
 			status: "failure",
 			data: {
-				message: "Missing username field"
+				message: "Missing taskname field"
 			}
 		});
 		return;
 	}
-	const username = req.body.username;
-	User.find({username: username})
+	const taskname = req.body.taskname;
+	Task.find({taskname: taskname})
 		.then((result) => {
 			if (Object.keys(result).length > 0) {
-				User.deleteOne({username: username}, err => {
+				Task.deleteOne({taskname: taskname}, err => {
 					if (err) {
 						console.log(err);
 						res.status(404).send({
             				status: "failure",
 		            		data: {
-		                		message: "Error deleting user from database"
+		                		message: "Error deleting task from database"
 		            		}
         				});
         				return;
@@ -175,7 +175,7 @@ exports.delete_user = (req, res) => {
 					res.status(200).send({
 						status: "success",
 						data: {
-							message: "User deletion successful"
+							message: "Task deletion successful"
 						}
 					});
 					return;
@@ -184,7 +184,7 @@ exports.delete_user = (req, res) => {
 				res.status(404).send({
             		status: "failure",
             		data: {
-                		message: "No user with username " + username + " exists"
+                		message: "No task with taskname " + taskname + " exists"
             		}
         		});
         		return;
@@ -192,39 +192,39 @@ exports.delete_user = (req, res) => {
 		});
 };
 
-exports.update_password = (req, res) => {
-	if (hasMissingUserNameField(req)) {
+exports.update_task = (req, res) => {
+	if (hasMissingTaskNameField(req)) {
 		res.status(400).send({
 				status: "failure",
 				data: {
-					message: "Missing username field"
+					message: "Missing taskname field"
 				}
 			});
 		return;
 	}
 
-	if (hasMissingPasswordField(req)) {
+	if (hasMissingDescriptionField(req)) {
 		res.status(400).send({
 			status: "failure",
 			data: {
-				message: "Missing password field"
+				message: "Missing description field"
 			}
 		});
 		return;
 	}
 
-	const username = req.body.username;
-	const password = req.body.password;
-	User.find({username: username})
+	const taskname = req.body.taskname;
+	const description = req.body.description;
+	Task.find({taskname: taskname})
 		.then((result) => {
 			if (Object.keys(result).length > 0) {
-				User.findOneAndUpdate({username: username}, {password: password}, err => {
+				Task.findOneAndUpdate({taskname: taskname}, {description: description}, err => {
 					if (err) {
 						console.log(err);
 						res.status(404).send({
             				status: "failure",
 		            		data: {
-		                		message: "Error updating user password in database"
+		                		message: "Error updating task description in database"
 		            		}
         				});
         				return;
@@ -232,7 +232,7 @@ exports.update_password = (req, res) => {
 					res.status(200).send({
 						status: "success",
 						data: {
-							message: "Password update successful"
+							message: "Task description update successful"
 						}
 					});
 					return;
@@ -241,7 +241,7 @@ exports.update_password = (req, res) => {
 				res.status(404).send({
             		status: "failure",
             		data: {
-                		message: "No user with username " + username + " exists"
+                		message: "No task with taskname " + taskname + " exists"
             		}
         		});
         		return;
@@ -250,15 +250,15 @@ exports.update_password = (req, res) => {
 
 };
 
-exports.find_user = (req, res) => {
-	const username = req.query.username;
-	User.find({username: username})
+exports.find_task = (req, res) => {
+	const taskname = req.query.taskname;
+	Task.find({taskname: taskname})
 		.then((result) => {
 			if (Object.keys(result).length > 0) {
 				res.status(200).send({
 					status: "success",
 					data: {
-						message: "User exists"
+						message: "Task: " + taskname + " exists"
 					}
 				});
 				return;
@@ -267,7 +267,7 @@ exports.find_user = (req, res) => {
 				res.status(404).send({
             		status: "failure",
             		data: {
-                		message: "No user with username " + username + " exists"
+                		message: "No task with taskname " + taskname + " exists"
             		}
         		});
         		return;
