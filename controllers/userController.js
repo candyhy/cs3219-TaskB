@@ -39,7 +39,7 @@ const isPasswordAndUserMatch = (req, res) => {
 	        		});
 				} else {
 					res.status(200).send({
-	            		status: "success",
+	            		status: "failure",
 	            		data: {
 	                		message: "Invalid password"
 	            		}
