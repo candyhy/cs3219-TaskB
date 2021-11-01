@@ -23,8 +23,7 @@ describe( "add 2 tasks", () => {
             chai.request( app )
                 .post( '/create_task')
                 .send({
-                    taskname: testData.validTask1.taskname,
-                    description: testData.validTask1.description
+                    taskname: testData.validTask1.taskname
                 })
                 .end( ( err, res ) => {
                     if (err) {
@@ -40,8 +39,7 @@ describe( "add 2 tasks", () => {
             chai.request( app )
                 .post( '/create_task')
                 .send({
-                    taskname: testData.validTask2.taskname,
-                    description: testData.validTask2.description
+                    taskname: testData.validTask2.taskname
                 })
                 .end( ( err, res ) => {
                     if (err) {
@@ -55,15 +53,15 @@ describe( "add 2 tasks", () => {
     } );
 } );
 
-describe( "update task description", () => {
+describe( "update task name", () => {
     describe( "PUT /update_task", () => {
-        it( "should update task 'task2' description from 'description2' to 'testDescription'", ( done ) => {
+        it( "should update taskname 'task2'to 'taskUpdate'", ( done ) => {
    
             chai.request( app )
                 .put( '/update_task')
                 .send({
-                    taskname: testData.updateTaskDescription.taskname,
-                    description: testData.updateTaskDescription.description
+                    taskname: testData.validTask1.taskname,
+                    newTaskname: testData.updateTaskName.taskname
                 })
                 .end( ( err, response ) => {
                 if (err) {
@@ -100,15 +98,12 @@ describe( "delete task", () => {
     } );
 } );
 
-describe( "find task", () => {
-    describe( "GET /find_task", () => {
-        it( "should find task with input taskname", ( done ) => {
+describe( "get all tasks", () => {
+    describe( "GET /get_tasks", () => {
+        it( "should get all tasks", ( done ) => {
    
             chai.request( app )
-                .get( '/find_task')
-                .query({
-                    taskname: testData.validTask1.taskname
-                })
+                .get( '/get_tasks')
                 .end( ( err, response ) => {
                 if (err) {
                     return done(err);

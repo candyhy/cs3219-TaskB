@@ -2,15 +2,7 @@ const Task = require('../models/Task');
 const mongoose = require('mongoose');
 
 const hasMissingTaskNameField = (req) => {
-	return req.body.taskname == undefined;
-}
-
-const hasMissingDescriptionField = (req) => {
-	return req.body.description == undefined;
-};
-
-const hasMissingFields = (req) => {
-	return req.body.taskname == undefined && req.body.description == undefined; 
+	return req.body.taskname == undefined || req.body.length == 0;
 }
 
 /*const isPasswordAndUserMatch = (req, res) => {
@@ -51,16 +43,6 @@ const hasMissingFields = (req) => {
 
 exports.create_task = (req, res) => {
 
-	if (hasMissingFields(req)) {
-		res.status(400).send({
-			status: "failure",
-			data: {
-				message: "Missing taskname and description fields"
-			}
-		});
-		return;
-	}
-
 	if (hasMissingTaskNameField(req)) {
 		res.status(400).send({
 			status: "failure",
@@ -72,24 +54,13 @@ exports.create_task = (req, res) => {
 
 	}
 
-	if (hasMissingDescriptionField(req)) {
-		res.status(400).send({
-			status: "failure",
-			data: {
-				message: "Missing description field"
-			}
-		});
-		return;
-	}
 	const taskname = req.body.taskname;
 	Task.find({taskname: taskname})
 		.then((result) => {
 			if (Object.keys(result).length == 0) {
-				const description = req.body.description;
 
 				const task = new Task({
-					taskname : taskname,
-					description : description,
+					taskname : taskname
 				});
 				task.save().then((result) => {
 					res.status(200).send({
@@ -202,23 +173,13 @@ exports.update_task = (req, res) => {
 			});
 		return;
 	}
-
-	if (hasMissingDescriptionField(req)) {
-		res.status(400).send({
-			status: "failure",
-			data: {
-				message: "Missing description field"
-			}
-		});
-		return;
-	}
-
 	const taskname = req.body.taskname;
-	const description = req.body.description;
+	const newTaskname = req.body.newTaskname;
 	Task.find({taskname: taskname})
 		.then((result) => {
 			if (Object.keys(result).length > 0) {
-				Task.findOneAndUpdate({taskname: taskname}, {description: description}, err => {
+				Task.findOneAndUpdate({taskname: taskname}, {taskname: newTaskname}, 
+					err => {
 					if (err) {
 						console.log(err);
 						res.status(404).send({
@@ -250,7 +211,7 @@ exports.update_task = (req, res) => {
 
 };
 
-exports.find_task = (req, res) => {
+/*exports.find_task = (req, res) => {
 	const taskname = req.query.taskname;
 	Task.find({taskname: taskname})
 		.then((result) => {
@@ -273,4 +234,29 @@ exports.find_task = (req, res) => {
         		return;
 			}
 		});
+}*/
+
+exports.get_tasks = (req, res) => {
+	Task.find({}, {_id: 0, __v: 0}).then((result) => {
+		if (Object.keys(result).length > 0) {
+			res.status(200).send({
+				status: "success",
+				data: {
+					message: JSON.parse(JSON.stringify(Object(result)))
+				}
+			});
+		} else {
+			res.status(404).send({
+				status: "failure",
+				data: {
+					message: "No tasks found"
+				}
+			});
+		}
+	});
+	
+	return;
 }
+
+
+

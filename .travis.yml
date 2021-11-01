@@ -3,4 +3,5 @@ node_js:
   - 12
 services:
   - mongodb  
-script: npm test
+script: 
+  - npm test
