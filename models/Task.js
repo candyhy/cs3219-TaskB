@@ -6,7 +6,11 @@ const taskSchema = new Schema({
 		type: String,
 		unique: true,
 		required: true,
-	}/*,
+	},
+	isDone: {
+		type: Boolean
+	}
+	/*,
 	description: {
 		type: String,
 		required:true,

@@ -2,8 +2,17 @@ const Task = require('../models/Task');
 const mongoose = require('mongoose');
 
 const hasMissingTaskNameField = (req) => {
-	return req.body.taskname == undefined || req.body.length == 0;
+	return req.body.taskname == undefined || req.body.taskname.length == 0;
 }
+
+const hasMissingisDoneField = (req, res) => {
+	return req.body.isDone == undefined || req.body.isDone.length == 0;
+}
+
+const hasMissingFields = (req) => {
+	return req.body == undefined || req.body.length == 0;
+}
+
 
 /*const isPasswordAndUserMatch = (req, res) => {
 	const username = req.body.username;
@@ -43,6 +52,16 @@ const hasMissingTaskNameField = (req) => {
 
 exports.create_task = (req, res) => {
 
+	if (hasMissingFields(req)) {
+		res.status(400).send({
+			status: "failure",
+			data: {
+				message: "Missing taskname and isDone fields"
+			}
+		});
+		return;
+	}
+
 	if (hasMissingTaskNameField(req)) {
 		res.status(400).send({
 			status: "failure",
@@ -51,16 +70,26 @@ exports.create_task = (req, res) => {
 			}
 		});
 		return;
-
+	}
+	if (hasMissingisDoneField(req)) {
+		res.status(400).send({
+			status: "failure",
+			data: {
+				message: "Missing isDone field"
+			}
+		});
+		return;
 	}
 
 	const taskname = req.body.taskname;
+	const isDone = req.body.isDone;
 	Task.find({taskname: taskname})
 		.then((result) => {
 			if (Object.keys(result).length == 0) {
 
 				const task = new Task({
-					taskname : taskname
+					taskname : taskname,
+					isDone: isDone
 				});
 				task.save().then((result) => {
 					res.status(200).send({
@@ -164,6 +193,16 @@ exports.delete_task = (req, res) => {
 };
 
 exports.update_task = (req, res) => {
+	if (hasMissingFields(req)) {
+		res.status(400).send({
+			status: "failure",
+			data: {
+				message: "Missing taskname and isDone fields"
+			}
+		});
+		return;
+	}
+
 	if (hasMissingTaskNameField(req)) {
 		res.status(400).send({
 				status: "failure",
@@ -173,12 +212,21 @@ exports.update_task = (req, res) => {
 			});
 		return;
 	}
+	if (hasMissingisDoneField(req)) {
+		res.status(400).send({
+				status: "failure",
+				data: {
+					message: "Missing isDone field"
+				}
+			});
+		return;
+	}
 	const taskname = req.body.taskname;
-	const newTaskname = req.body.newTaskname;
+	const isDone = req.body.isDone;
 	Task.find({taskname: taskname})
 		.then((result) => {
 			if (Object.keys(result).length > 0) {
-				Task.findOneAndUpdate({taskname: taskname}, {taskname: newTaskname}, 
+				Task.findOneAndUpdate({taskname: taskname}, {isDone: isDone}, 
 					err => {
 					if (err) {
 						console.log(err);
@@ -193,7 +241,7 @@ exports.update_task = (req, res) => {
 					res.status(200).send({
 						status: "success",
 						data: {
-							message: "Task description update successful"
+							message: "Task status update successful"
 						}
 					});
 					return;

@@ -23,7 +23,8 @@ describe( "add 2 tasks", () => {
             chai.request( app )
                 .post( '/create_task')
                 .send({
-                    taskname: testData.validTask1.taskname
+                    taskname: testData.validTask1.taskname,
+                    isDone: testData.validTask1.isDone
                 })
                 .end( ( err, res ) => {
                     if (err) {
@@ -39,7 +40,8 @@ describe( "add 2 tasks", () => {
             chai.request( app )
                 .post( '/create_task')
                 .send({
-                    taskname: testData.validTask2.taskname
+                    taskname: testData.validTask2.taskname,
+                    isDone:testData.validTask2.isDone
                 })
                 .end( ( err, res ) => {
                     if (err) {
@@ -55,13 +57,13 @@ describe( "add 2 tasks", () => {
 
 describe( "update task name", () => {
     describe( "PUT /update_task", () => {
-        it( "should update taskname 'task2'to 'taskUpdate'", ( done ) => {
+        it( "should update task status of task 2 to true", ( done ) => {
    
             chai.request( app )
                 .put( '/update_task')
                 .send({
-                    taskname: testData.validTask1.taskname,
-                    newTaskname: testData.updateTaskName.taskname
+                    taskname: testData.updateTaskStatus.taskname,
+                    isDone: testData.updateTaskStatus.isDone
                 })
                 .end( ( err, response ) => {
                 if (err) {
