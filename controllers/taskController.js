@@ -14,42 +14,6 @@ const hasMissingFields = (req) => {
 }
 
 
-/*const isPasswordAndUserMatch = (req, res) => {
-	const username = req.body.username;
-	User.find({username: username})
-        .then((result) => {
-            if (Object.keys(result).length == 0) {
-				res.status(404).send({
-            		status: "failure",
-            		data: {
-                		message: "Invalid username"
-            		}
-        		});
-        		return;
-			} else {
-				data = result[0];
-				const passwordField = data.password;
-				const inputPassword = req.body.password;
-
-				if (passwordField == inputPassword) {
-					res.status(200).send({
-	            		status: "success",
-	            		data: {
-	                		message: "Valid password"
-	            		}
-	        		});
-				} else {
-					res.status(200).send({
-	            		status: "failure",
-	            		data: {
-	                		message: "Invalid password"
-	            		}
-	        		});
-				}
-			}
-        });
-};*/
-
 exports.create_task = (req, res) => {
 
 	if (hasMissingFields(req)) {
@@ -112,40 +76,6 @@ exports.create_task = (req, res) => {
 		});
 };
 
-/*exports.user_login = (req, res) => {
-	if (hasMissingAuthFields(req)) {
-		res.status(400).send({ 
-			status: "failure",
-			data: {
-				message: "Missing username and password field"
-			}
-		});
-		return;
-	}
-
-	if (hasMissingUserNameField(req)) {
-		res.status(400).send({
-				status: "failure",
-				data: {
-					message: "Missing username field"
-				}
-			});
-		return;
-	}
-
-	if (hasMissingPasswordField(req)) {
-		res.status(400).send({
-			status: "failure",
-			data: {
-				message: "Missing password field"
-			}
-		});
-		return;
-	}
-
-	isPasswordAndUserMatch(req, res);
-	return;
-};*/
 
 exports.delete_task = (req, res) => {
 	if (hasMissingTaskNameField(req)) {
@@ -259,30 +189,6 @@ exports.update_task = (req, res) => {
 
 };
 
-/*exports.find_task = (req, res) => {
-	const taskname = req.query.taskname;
-	Task.find({taskname: taskname})
-		.then((result) => {
-			if (Object.keys(result).length > 0) {
-				res.status(200).send({
-					status: "success",
-					data: {
-						message: "Task: " + taskname + " exists"
-					}
-				});
-				return;
- 		
-        	} else {
-				res.status(404).send({
-            		status: "failure",
-            		data: {
-                		message: "No task with taskname " + taskname + " exists"
-            		}
-        		});
-        		return;
-			}
-		});
-}*/
 
 exports.get_tasks = (req, res) => {
 	Task.find({}, {_id: 0, __v: 0}).then((result) => {
