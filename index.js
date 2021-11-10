@@ -13,7 +13,7 @@ mongoose.connect(uri)
      .then((result) => {
          console.log('Connected to MongoDB');
 
-         const port = process.env.PORT || 3600;
+         const port = process.env.PORT || 8080;
          app.listen(port, () => {
              console.log(`Server listening on port ${port}`);
          });
@@ -31,6 +31,7 @@ mongoose.connect(uri)
          }
      });
  });
+
 
  // Export app for testing purposes
 module.exports = app;
