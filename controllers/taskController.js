@@ -73,6 +73,11 @@ exports.create_task = (req, res) => {
         		});
         		return;
 			}
+		}).catch((err) => {
+			res.status(500).json({
+				status: "error",
+				error_message: "Error writing to database"
+			});
 		});
 };
 
@@ -109,7 +114,7 @@ exports.delete_task = (req, res) => {
 						}
 					});
 					return;
-				});  		
+				});		
         	} else {
 				res.status(404).send({
             		status: "failure",
@@ -119,7 +124,12 @@ exports.delete_task = (req, res) => {
         		});
         		return;
 			}
-		});
+		}).catch((err) => {
+			res.status(500).json({
+				status: "error",
+				error_message: "Error reading from database"
+			});
+	});	
 };
 
 exports.update_task = (req, res) => {
@@ -185,13 +195,19 @@ exports.update_task = (req, res) => {
         		});
         		return;
 			}
+		}).catch((err) => {
+			res.status(500).json({
+				status: "error",
+				error_message: "Error writing to database"
+			});
 		});
-
+	return;
 };
 
 
 exports.get_tasks = (req, res) => {
-	Task.find({}, {_id: 0, __v: 0}).then((result) => {
+	Task.find({}, {_id: 0, __v: 0})
+	.then((result) => {
 		if (Object.keys(result).length > 0) {
 			res.status(200).send({
 				status: "success",
@@ -207,8 +223,12 @@ exports.get_tasks = (req, res) => {
 				}
 			});
 		}
-	});
-	
+	}).catch((err) => {
+		res.status(500).json({
+			status: "error",
+			error_message: "Error reading from database"
+		});
+	});	
 	return;
 }
 
